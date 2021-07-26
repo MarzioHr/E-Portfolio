@@ -1,0 +1,172 @@
+
+Target: 18.168.216.191
+URL: www.123easyinvite.com
+
+========================================================================================
+1. Scanning Output using NMAP
+========================================================================================
+
+Normal Scan:
+┌──(kali㉿kali)-[~]
+└─$ nmap 18.168.216.191
+Nmap scan report for ec2-18-168-216-191.eu-west-2.compute.amazonaws.com (18.168.216.191)
+Host is up (0.039s latency).
+Not shown: 998 filtered ports
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+
+Nmap done: 1 IP address (1 host up) scanned in 53.37 seconds
+
+
+Aggressive Scan:
+┌──(kali㉿kali)-[~]
+└─$ nmap -A 18.168.216.191
+Nmap scan report for ec2-18-168-216-191.eu-west-2.compute.amazonaws.com (18.168.216.191)
+Host is up (0.041s latency).
+Not shown: 998 filtered ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.4 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 27:bf:d1:ec:34:d9:26:cf:34:65:fc:7d:99:97:4e:76 (RSA)
+|   256 ba:df:47:d1:e1:0e:5d:ea:43:d3:c5:e9:41:a8:38:fe (ECDSA)
+|_  256 8c:68:d5:6d:47:fa:0f:72:f2:01:5b:28:f0:e9:59:1d (ED25519)
+80/tcp open  http    Apache httpd
+|_http-server-header: Apache
+|_http-title: Your Thoughts
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 79.42 seconds
+
+
+OS Fingerprint:
+┌──(kali㉿kali)-[~]
+└─$ sudo nmap -O 18.168.216.191                                          1 ⨯
+Nmap scan report for ec2-18-168-216-191.eu-west-2.compute.amazonaws.com (18.168.216.191)
+Host is up (0.0083s latency).
+Not shown: 998 filtered ports
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: WAP|phone
+Running: Linux 2.4.X|2.6.X, Sony Ericsson embedded
+OS CPE: cpe:/o:linux:linux_kernel:2.4.20 cpe:/o:linux:linux_kernel:2.6.22 cpe:/h:sonyericsson:u8i_vivaz
+OS details: Tomato 1.28 (Linux 2.4.20), Tomato firmware (Linux 2.6.22), Sony Ericsson U8i Vivaz mobile phone
+
+OS detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 14.60 seconds
+
+
+Traceroute:
+┌──(kali㉿kali)-[~]
+└─$ nmap --traceroute 18.168.216.191
+Nmap scan report for ec2-18-168-216-191.eu-west-2.compute.amazonaws.com (18.168.216.191)
+Host is up (0.018s latency).
+Not shown: 998 filtered ports
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+
+TRACEROUTE (using port 80/tcp)
+HOP RTT     ADDRESS
+1   0.58 ms 192.168.59.2
+2   0.54 ms ec2-18-168-216-191.eu-west-2.compute.amazonaws.com (18.168.216.191)
+
+Nmap done: 1 IP address (1 host up) scanned in 54.93 seconds
+
+
+
+
+========================================================================================
+2. Automated Scanning using Nikto
+========================================================================================
+
+──(kali㉿kali)-[~]
+└─$ nikto -host 18.168.216.191                                         127 ⨯
+- Nikto v2.1.6
+---------------------------------------------------------------------------
++ Target IP:          18.168.216.191
++ Target Hostname:    18.168.216.191
++ Target Port:        80
++ Start Time:         2021-07-04 13:28:16 (GMT-4)
+---------------------------------------------------------------------------
++ Server: Apache
++ The anti-clickjacking X-Frame-Options header is not present.
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
++ No CGI Directories found (use '-C all' to force check all possible dirs)
++ Web Server returns a valid response with junk HTTP methods, this may cause false positives.
++ OSVDB-6694: /.DS_Store: Apache on Mac OSX will serve the .DS_Store file, which contains sensitive information. Configure Apache to ignore this file or upgrade to a newer version.
++ 7923 requests: 8 error(s) and 5 item(s) reported on remote host
++ End Time:           2021-07-04 13:37:42 (GMT-4) (566 seconds)
+---------------------------------------------------------------------------
++ 1 host(s) tested
+
+
+
+========================================================================================
+3. Metasploit Framework - Testing against Target
+========================================================================================
+
+TARGET: 18.168.216.191
+URL: www.123easyinvite.com
+
+###########################
+
+SSH Version:
+SSH-2.0-OpenSSH_7.4 ( service.version=7.4 service.vendor=OpenBSD service.family=OpenSSH service.product=OpenSSH service.cpe23=cpe:/a:openbsd:openssh:7.4 service.protocol=ssh fingerprint_db=ssh.banner )
+
+###########################
+
+WMAP:
+msf6 auxiliary(scanner/ssh/ssh_version) > wmap_run -t
+[*] Testing target:
+[*]     Site: 18.168.216.191 (18.168.216.191)
+[*]     Port: 80 SSL: false
+============================================================
+[*] Testing started. 2021-07-04 12:04:53 -0400
+[*] Loading wmap modules...
+[*] 39 wmap enabled modules loaded.
+
+[...]
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Launch completed in 4553.764599323273 seconds.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+[*] Done.
+msf6 auxiliary(scanner/ssh/ssh_version) > wmap_vulns -l
+[*] + [18.168.216.191] (18.168.216.191): scraper /
+[*]     scraper Scraper
+[*]     GET Your Thoughts
+[*] + [18.168.216.191] (18.168.216.191): directory /git/
+[*]     directory Directory found.
+[*]     GET Res code: 200
+[*] + [18.168.216.191] (18.168.216.191): file /index.php
+[*]     file File found.
+[*]     GET Res code: 404
+[*] + [18.168.216.191] (18.168.216.191): file /assets
+[*]     file File found.
+[*]     GET Res code: 301
+
+###########################
+
+Vulnerability Lookup:
+
+msf6 auxiliary(scanner/ssh/ssh_version) > vulns
+
+Vulnerabilities
+===============
+
+Timestamp  Host  Name  References
+---------  ----  ----  ----------
+
+
+###########################
+
+Comments:
+
+Metasploit was able to identify the SSH version used on the server. Although some information was leaked (see directories/files that were found in WMAP output), the WMAP module was not able to find any vulnerabilities within the Web Application itself.
+
+No CVEs found for OpenSSH 7.4 either. Source: https://www.cvedetails.com/vulnerability-list/vendor_id-97/product_id-585/version_id-228285/Openbsd-Openssh-7.4.html 
+
